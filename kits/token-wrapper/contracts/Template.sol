@@ -22,7 +22,7 @@ import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
 import "@aragon/apps-vault/contracts/Vault.sol";
 import "@aragon/apps-finance/contracts/Finance.sol";
 
-import "./CounterApp.sol";
+// import "./CounterApp.sol";
 import "./TokenWrapper.sol";
 
 // TODO: Remove
@@ -79,7 +79,7 @@ contract Template is TemplateBase {
     acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
     // Create apps.
-    CounterApp app = CounterApp(createApp(dao, apmNamehash("react-test")));
+    // CounterApp app = CounterApp(createApp(dao, apmNamehash("react-test")));
     Voting voting = Voting(createApp(dao, apmNamehash("voting")));
     // TokenManager tokenManager = TokenManager(createApp(dao, apmNamehash("token-manager")));
     Vault vault = Vault(createApp(dao, apmNamehash("vault")));
@@ -95,7 +95,7 @@ contract Template is TemplateBase {
     ERC20Sample wrappedToken = new ERC20Sample();
 
     // Initialize apps.
-    app.initialize();
+    // app.initialize();
     // tokenManager.initialize(token, true, 0);
     voting.initialize(token, 50 * PCT, 20 * PCT, 1 days);
     vault.initialize();
@@ -110,8 +110,8 @@ contract Template is TemplateBase {
     acl.createPermission(ANY_ENTITY, voting, voting.CREATE_VOTES_ROLE(), root);
 
     // Allow the voting app to increment the counter, and any entity to decrement it.
-    acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
-    acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
+    // acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
+    // acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
 
     // Allow the token manager to mint tokens.
     // acl.grantPermission(voting, tokenManager, tokenManager.MINT_ROLE());
