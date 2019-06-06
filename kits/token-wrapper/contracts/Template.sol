@@ -17,13 +17,16 @@ import "@aragon/os/contracts/lib/ens/PublicResolver.sol";
 import "@aragon/os/contracts/apm/APMNamehash.sol";
 
 import "@aragon/apps-voting/contracts/Voting.sol";
-import "@aragon/apps-token-manager/contracts/TokenManager.sol";
+// import "@aragon/apps-token-manager/contracts/TokenManager.sol";
 import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
 import "@aragon/apps-vault/contracts/Vault.sol";
 import "@aragon/apps-finance/contracts/Finance.sol";
 
 import "./CounterApp.sol";
+import "./TokenWrapper.sol";
 
+// TODO: Remove
+import "./test/mocks/ERC20Sample.sol";
 
 contract TemplateBase is APMNamehash {
     ENS public ens;
@@ -54,73 +57,82 @@ contract TemplateBase is APMNamehash {
 
 
 contract Template is TemplateBase {
-    MiniMeTokenFactory tokenFactory;
+  MiniMeTokenFactory tokenFactory;
 
-    uint64 constant PCT = 10 ** 16;
-    address constant ANY_ENTITY = address(-1);
+  uint64 constant PCT = 10 ** 16;
+  address constant ANY_ENTITY = address(-1);
 
-    constructor(ENS ens) TemplateBase(DAOFactory(0), ens) public {
-        tokenFactory = new MiniMeTokenFactory();
-    }
+  constructor(ENS ens) TemplateBase(DAOFactory(0), ens) public {
+    tokenFactory = new MiniMeTokenFactory();
+  }
 
-    function createApp(Kernel dao, bytes32 id) internal returns(address) {
-      return dao.newAppInstance(id, latestVersionAppBase(id));
-    }
+  function createApp(Kernel dao, bytes32 id) internal returns(address) {
+    return dao.newAppInstance(id, latestVersionAppBase(id));
+  }
 
-    function newInstance() public {
-        Kernel dao = fac.newDAO(this);
-        ACL acl = ACL(dao.acl());
-        acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
+  function newInstance() public {
+    
+    // Initialize DAO.
+    address root = msg.sender;
+    Kernel dao = fac.newDAO(this);
+    ACL acl = ACL(dao.acl());
+    acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
-        address root = msg.sender;
+    // Create apps.
+    CounterApp app = CounterApp(createApp(dao, apmNamehash("react-test")));
+    Voting voting = Voting(createApp(dao, apmNamehash("voting")));
+    // TokenManager tokenManager = TokenManager(createApp(dao, apmNamehash("token-manager")));
+    Vault vault = Vault(createApp(dao, apmNamehash("vault")));
+    Finance finance = Finance(createApp(dao, apmNamehash("finance")));
+    TokenWrapper tokenWrapper = TokenWrapper(createApp(dao, apmNamehash("token-wrapper")));
 
-        // bytes32 appId = apmNamehash("react-test");
-        // bytes32 votingAppId = apmNamehash("voting");
-        // bytes32 tokenManagerAppId = apmNamehash("token-manager");
+    // Create MiniMe token.
+    MiniMeToken token = tokenFactory.createCloneToken(MiniMeToken(0), 0, "App token", 0, "APP", true);
+    token.changeController(tokenWrapper);
 
-        // CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        // Voting voting = Voting(dao.newAppInstance(votingAppId, latestVersionAppBase(votingAppId)));
-        // TokenManager tokenManager = TokenManager(dao.newAppInstance(tokenManagerAppId, latestVersionAppBase(tokenManagerAppId)));
+    // Create a dummy token.
+    // TODO: Remove - Users should be able to set this dynamically...
+    ERC20Sample wrappedToken = new ERC20Sample();
 
-        CounterApp app = CounterApp(createApp(dao, apmNamehash("react-test")));
-        Voting voting = Voting(createApp(dao, apmNamehash("voting")));
-        TokenManager tokenManager = TokenManager(createApp(dao, apmNamehash("token-manager")));
-        Vault vault = Vault(createApp(dao, apmNamehash("vault")));
-        Finance finance = Finance(createApp(dao, apmNamehash("finance")));
+    // Initialize apps.
+    app.initialize();
+    // tokenManager.initialize(token, true, 0);
+    voting.initialize(token, 50 * PCT, 20 * PCT, 1 days);
+    vault.initialize();
+    finance.initialize(vault, 30 days);
+    tokenWrapper.initialize(token, wrappedToken);
 
-        MiniMeToken token = tokenFactory.createCloneToken(MiniMeToken(0), 0, "App token", 0, "APP", true);
-        token.changeController(tokenManager);
+    // Mint one token to the sender.
+    // acl.createPermission(this, tokenManager, tokenManager.MINT_ROLE(), this);
+    // tokenManager.mint(root, 1); // Give one token to root
 
-        app.initialize();
-        tokenManager.initialize(token, true, 0);
-        // Initialize apps
-        voting.initialize(token, 50 * PCT, 20 * PCT, 1 days);
-        vault.initialize();
-        finance.initialize(vault, 30 days);
+    // Allow any entity to create a vote.
+    acl.createPermission(ANY_ENTITY, voting, voting.CREATE_VOTES_ROLE(), root);
 
-        acl.createPermission(this, tokenManager, tokenManager.MINT_ROLE(), this);
-        tokenManager.mint(root, 1); // Give one token to root
+    // Allow the voting app to increment the counter, and any entity to decrement it.
+    acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
+    acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
 
-        acl.createPermission(ANY_ENTITY, voting, voting.CREATE_VOTES_ROLE(), root);
+    // Allow the token manager to mint tokens.
+    // acl.grantPermission(voting, tokenManager, tokenManager.MINT_ROLE());
 
-        acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
-        acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
-        acl.grantPermission(voting, tokenManager, tokenManager.MINT_ROLE());
+    // Setup permissions for the finance and vault apps.
+    acl.createPermission(finance, vault, vault.TRANSFER_ROLE(), voting);
+    acl.createPermission(voting, finance, finance.CREATE_PAYMENTS_ROLE(), voting);
+    acl.createPermission(voting, finance, finance.EXECUTE_PAYMENTS_ROLE(), voting);
+    acl.createPermission(voting, finance, finance.MANAGE_PAYMENTS_ROLE(), voting);
 
-        acl.createPermission(finance, vault, vault.TRANSFER_ROLE(), voting);
-        acl.createPermission(voting, finance, finance.CREATE_PAYMENTS_ROLE(), voting);
-        acl.createPermission(voting, finance, finance.EXECUTE_PAYMENTS_ROLE(), voting);
-        acl.createPermission(voting, finance, finance.MANAGE_PAYMENTS_ROLE(), voting);
+    // TODO: Set permissions for the token wrapper app.
+    // ...
 
-        // Clean up permissions
-        acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());
-        acl.revokePermission(this, dao, dao.APP_MANAGER_ROLE());
-        acl.setPermissionManager(root, dao, dao.APP_MANAGER_ROLE());
+    // Clean up permissions.
+    acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());
+    acl.revokePermission(this, dao, dao.APP_MANAGER_ROLE());
+    acl.setPermissionManager(root, dao, dao.APP_MANAGER_ROLE());
+    acl.grantPermission(root, acl, acl.CREATE_PERMISSIONS_ROLE());
+    acl.revokePermission(this, acl, acl.CREATE_PERMISSIONS_ROLE());
+    acl.setPermissionManager(root, acl, acl.CREATE_PERMISSIONS_ROLE());
 
-        acl.grantPermission(root, acl, acl.CREATE_PERMISSIONS_ROLE());
-        acl.revokePermission(this, acl, acl.CREATE_PERMISSIONS_ROLE());
-        acl.setPermissionManager(root, acl, acl.CREATE_PERMISSIONS_ROLE());
-
-        emit DeployInstance(dao);
-    }
+    emit DeployInstance(dao);
+  }
 }
