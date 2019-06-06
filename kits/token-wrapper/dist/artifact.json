@@ -1,0 +1,378 @@
+{
+	"roles": [
+		{
+			"name": "Increment the counter",
+			"id": "INCREMENT_ROLE",
+			"params": [],
+			"bytes": "0xa5be7a5782a02b192d813e38755a8b0f7a8b22c44f4d8bd9bd2697eb4b6b9eb2"
+		},
+		{
+			"name": "Decrement the counter",
+			"id": "DECREMENT_ROLE",
+			"params": [],
+			"bytes": "0x6e46e39f4f121e8e4e992626990ce2fdbd501ac84167db8c74df030be07819a4"
+		}
+	],
+	"environments": {
+		"default": {
+			"network": "development",
+			"appName": "react-test.aragonpm.eth"
+		}
+	},
+	"path": "contracts/CounterApp.sol",
+	"appName": "react-test.aragonpm.eth",
+	"appId": "0x9baa4bf3213f1baa854dc0311d0f1331d3d50c80280fb25ac611dae058da6f0b",
+	"abi": [
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "INCREMENT_ROLE",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "hasInitialized",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"name": "_script",
+					"type": "bytes"
+				}
+			],
+			"name": "getEVMScriptExecutor",
+			"outputs": [
+				{
+					"name": "",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getRecoveryVault",
+			"outputs": [
+				{
+					"name": "",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "value",
+			"outputs": [
+				{
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"name": "token",
+					"type": "address"
+				}
+			],
+			"name": "allowRecoverability",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "appId",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getInitializationBlock",
+			"outputs": [
+				{
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"name": "_token",
+					"type": "address"
+				}
+			],
+			"name": "transferToVault",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [
+				{
+					"name": "_sender",
+					"type": "address"
+				},
+				{
+					"name": "_role",
+					"type": "bytes32"
+				},
+				{
+					"name": "_params",
+					"type": "uint256[]"
+				}
+			],
+			"name": "canPerform",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "getEVMScriptRegistry",
+			"outputs": [
+				{
+					"name": "",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "kernel",
+			"outputs": [
+				{
+					"name": "",
+					"type": "address"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "isPetrified",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"constant": true,
+			"inputs": [],
+			"name": "DECREMENT_ROLE",
+			"outputs": [
+				{
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"payable": false,
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"name": "entity",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"name": "step",
+					"type": "uint256"
+				}
+			],
+			"name": "Increment",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"name": "entity",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"name": "step",
+					"type": "uint256"
+				}
+			],
+			"name": "Decrement",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"name": "executor",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"name": "script",
+					"type": "bytes"
+				},
+				{
+					"indexed": false,
+					"name": "input",
+					"type": "bytes"
+				},
+				{
+					"indexed": false,
+					"name": "returnData",
+					"type": "bytes"
+				}
+			],
+			"name": "ScriptResult",
+			"type": "event"
+		},
+		{
+			"constant": false,
+			"inputs": [],
+			"name": "initialize",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"name": "step",
+					"type": "uint256"
+				}
+			],
+			"name": "increment",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"constant": false,
+			"inputs": [
+				{
+					"name": "step",
+					"type": "uint256"
+				}
+			],
+			"name": "decrement",
+			"outputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	],
+	"deployment": {
+		"contractName": "CounterApp",
+		"compiledAt": "2019-06-06T15:01:49.006Z",
+		"compiler": {
+			"name": "solc",
+			"version": "0.4.24+commit.e67f0147.Emscripten.clang",
+			"optimizer": {
+				"enabled": false
+			}
+		},
+		"flattenedCode": "./code.sol",
+		"transactionHash": "0x0f63b0fe8604f5ca4643b794ddc52466d26818f2a3983e4c1b4c857be1aa672d"
+	},
+	"functions": [
+		{
+			"sig": "initialize()",
+			"roles": [],
+			"notice": null
+		},
+		{
+			"sig": "increment(uint256)",
+			"roles": [
+				"INCREMENT_ROLE"
+			],
+			"notice": "Increment the counter by `step`"
+		},
+		{
+			"sig": "decrement(uint256)",
+			"roles": [
+				"DECREMENT_ROLE"
+			],
+			"notice": "Decrement the counter by `step`"
+		}
+	]
+}
