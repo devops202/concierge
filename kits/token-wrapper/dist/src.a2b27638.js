@@ -67294,19 +67294,8 @@ function App() {
       api = _useAragonApi.api,
       appState = _useAragonApi.appState;
 
-  var count = appState.count,
-      syncing = appState.syncing;
-  return _react.default.createElement(_ui.Main, null, _react.default.createElement(BaseLayout, null, syncing && _react.default.createElement(Syncing, null), _react.default.createElement(Count, null, "Count: ", count), _react.default.createElement(Buttons, null, _react.default.createElement(_ui.Button, {
-    mode: "secondary",
-    onClick: function onClick() {
-      return api.decrement(1);
-    }
-  }, "Decrement"), _react.default.createElement(_ui.Button, {
-    mode: "secondary",
-    onClick: function onClick() {
-      return api.increment(1);
-    }
-  }, "Increment"))));
+  var syncing = appState.syncing;
+  return _react.default.createElement(_ui.Main, null, _react.default.createElement(BaseLayout, null, syncing && _react.default.createElement(Syncing, null), _react.default.createElement("p", null, "TokenWrapper")));
 }
 
 var BaseLayout = _styledComponents.default.div.withConfig({
@@ -67388,7 +67377,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35797" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39037" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

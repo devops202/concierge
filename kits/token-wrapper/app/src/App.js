@@ -5,20 +5,12 @@ import styled from 'styled-components'
 
 function App() {
   const { api, appState } = useAragonApi()
-  const { count, syncing } = appState
+  const { syncing } = appState
   return (
     <Main>
       <BaseLayout>
         {syncing && <Syncing />}
-        <Count>Count: {count}</Count>
-        <Buttons>
-          <Button mode="secondary" onClick={() => api.decrement(1)}>
-            Decrement
-          </Button>
-          <Button mode="secondary" onClick={() => api.increment(1)}>
-            Increment
-          </Button>
-        </Buttons>
+        <p>TokenWrapper</p>
       </BaseLayout>
     </Main>
   )

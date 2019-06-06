@@ -19,6 +19,8 @@ import "@aragon/os/contracts/apm/APMNamehash.sol";
 import "@aragon/apps-voting/contracts/Voting.sol";
 import "@aragon/apps-token-manager/contracts/TokenManager.sol";
 import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
+import "@aragon/apps-vault/contracts/Vault.sol";
+import "@aragon/apps-finance/contracts/Finance.sol";
 
 import "./CounterApp.sol";
 
@@ -61,19 +63,30 @@ contract Template is TemplateBase {
         tokenFactory = new MiniMeTokenFactory();
     }
 
+    function createApp(Kernel dao, bytes32 id) internal returns(address) {
+      return dao.newAppInstance(id, latestVersionAppBase(id));
+    }
+
     function newInstance() public {
         Kernel dao = fac.newDAO(this);
         ACL acl = ACL(dao.acl());
         acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
         address root = msg.sender;
-        bytes32 appId = apmNamehash("react-test");
-        bytes32 votingAppId = apmNamehash("voting");
-        bytes32 tokenManagerAppId = apmNamehash("token-manager");
 
-        CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        Voting voting = Voting(dao.newAppInstance(votingAppId, latestVersionAppBase(votingAppId)));
-        TokenManager tokenManager = TokenManager(dao.newAppInstance(tokenManagerAppId, latestVersionAppBase(tokenManagerAppId)));
+        // bytes32 appId = apmNamehash("react-test");
+        // bytes32 votingAppId = apmNamehash("voting");
+        // bytes32 tokenManagerAppId = apmNamehash("token-manager");
+
+        // CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
+        // Voting voting = Voting(dao.newAppInstance(votingAppId, latestVersionAppBase(votingAppId)));
+        // TokenManager tokenManager = TokenManager(dao.newAppInstance(tokenManagerAppId, latestVersionAppBase(tokenManagerAppId)));
+
+        CounterApp app = CounterApp(createApp(dao, apmNamehash("react-test")));
+        Voting voting = Voting(createApp(dao, apmNamehash("voting")));
+        TokenManager tokenManager = TokenManager(createApp(dao, apmNamehash("token-manager")));
+        Vault vault = Vault(createApp(dao, apmNamehash("vault")));
+        Finance finance = Finance(createApp(dao, apmNamehash("finance")));
 
         MiniMeToken token = tokenFactory.createCloneToken(MiniMeToken(0), 0, "App token", 0, "APP", true);
         token.changeController(tokenManager);
@@ -82,6 +95,8 @@ contract Template is TemplateBase {
         tokenManager.initialize(token, true, 0);
         // Initialize apps
         voting.initialize(token, 50 * PCT, 20 * PCT, 1 days);
+        vault.initialize();
+        finance.initialize(vault, 30 days);
 
         acl.createPermission(this, tokenManager, tokenManager.MINT_ROLE(), this);
         tokenManager.mint(root, 1); // Give one token to root
@@ -91,6 +106,11 @@ contract Template is TemplateBase {
         acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
         acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
         acl.grantPermission(voting, tokenManager, tokenManager.MINT_ROLE());
+
+        acl.createPermission(finance, vault, vault.TRANSFER_ROLE(), voting);
+        acl.createPermission(voting, finance, finance.CREATE_PAYMENTS_ROLE(), voting);
+        acl.createPermission(voting, finance, finance.EXECUTE_PAYMENTS_ROLE(), voting);
+        acl.createPermission(voting, finance, finance.MANAGE_PAYMENTS_ROLE(), voting);
 
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());
