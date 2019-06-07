@@ -10,11 +10,7 @@ module.exports = function(deployer) {
     .then(() => {
       return deployer.deploy(ERC20Sample)
         .then(() => {
-          return deployer.deploy(MiniMeToken, ZERO_ADDRESS, ZERO_ADDRESS, 0, 'Token', 18, 'TWR', false)
-            .then(async () => {
-              const token = await MiniMeToken.deployed();
-              await token.changeController(TokenWrapper.address);
-            });
+          return deployer.deploy(MiniMeToken, ZERO_ADDRESS, ZERO_ADDRESS, 0, 'Token', 18, 'TWR', false);
         });
     });
 };

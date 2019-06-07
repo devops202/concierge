@@ -1,8 +1,8 @@
-import '@babel/polyfill'
-import { of } from 'rxjs'
-import AragonApi from '@aragon/api'
+import '@babel/polyfill';
+import { of } from 'rxjs';
+import AragonApi from '@aragon/api';
 
-const INITIALIZATION_TRIGGER = Symbol('INITIALIZATION_TRIGGER')
+const INITIALIZATION_TRIGGER = Symbol('INITIALIZATION_TRIGGER');
 
 const api = new AragonApi()
 
@@ -12,13 +12,7 @@ api.store(
 
     switch (event.event) {
       case INITIALIZATION_TRIGGER:
-        newState = { count: await getValue() }
-        break
-      case 'Increment':
-        newState = { count: await getValue() }
-        break
-      case 'Decrement':
-        newState = { count: await getValue() }
+        newState = { erc20: await getERC20() }
         break
       default:
         newState = state
@@ -32,6 +26,6 @@ api.store(
   ]
 )
 
-async function getValue() {
-  return parseInt(await api.call('value').toPromise(), 10)
+async function getERC20() {
+  return await api.call('erc20').toPromise();
 }

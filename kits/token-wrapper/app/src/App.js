@@ -5,12 +5,13 @@ import styled from 'styled-components'
 
 function App() {
   const { api, appState } = useAragonApi()
-  const { syncing } = appState
+  const { erc20, syncing } = appState
   return (
     <Main>
       <BaseLayout>
         {syncing && <Syncing />}
         <p>TokenWrapper</p>
+        <p>{erc20}</p>
       </BaseLayout>
     </Main>
   )
@@ -22,10 +23,6 @@ const BaseLayout = styled.div`
   justify-content: center;
   height: 100vh;
   flex-direction: column;
-`
-
-const Count = styled.h1`
-  font-size: 30px;
 `
 
 const Buttons = styled.div`

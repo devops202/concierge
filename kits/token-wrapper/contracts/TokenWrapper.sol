@@ -44,7 +44,7 @@ contract TokenWrapper is ITokenController, IForwarder, AragonApp {
      * @param _token The MiniMe token that is used in the DAO
      * @param _erc20 The ERC20 token that is locked in order to receive MiniMe tokens
      */
-    function initialize(MiniMeToken _token, ERC20 _erc20) external {
+    function initialize(MiniMeToken _token, ERC20 _erc20) public onlyInit {
         initialized();
         require(_token.controller() == address(this), ERROR_INVALID_TOKEN_CONTROLLER);
 
