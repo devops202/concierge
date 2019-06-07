@@ -78,13 +78,18 @@ contract Template is TemplateBase {
     ACL acl = ACL(dao.acl());
     acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
-    // Create apps.
+    // Create official apps.
     // CounterApp app = CounterApp(createApp(dao, apmNamehash("react-test")));
     Voting voting = Voting(createApp(dao, apmNamehash("voting")));
     // TokenManager tokenManager = TokenManager(createApp(dao, apmNamehash("token-manager")));
     Vault vault = Vault(createApp(dao, apmNamehash("vault")));
     Finance finance = Finance(createApp(dao, apmNamehash("finance")));
-    TokenWrapper tokenWrapper = TokenWrapper(createApp(dao, apmNamehash("token-wrapper")));
+
+    // Create TokenWrapper app.
+    TokenWrapper tokenWrapper = TokenWrapper(
+      // createApp(dao, apmNamehash("token-wrapper"))
+      dao.newAppInstance("token-wrapper", new TokenWrapper())
+    );
 
     // Create MiniMe token.
     MiniMeToken token = tokenFactory.createCloneToken(MiniMeToken(0), 0, "App token", 0, "APP", true);
