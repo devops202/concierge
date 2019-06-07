@@ -4,14 +4,22 @@ import { Main, Button } from '@aragon/ui'
 import styled from 'styled-components'
 
 function App() {
+
   const { api, appState } = useAragonApi()
-  const { erc20, syncing } = appState
+
+  const { 
+    erc20, 
+    token,
+    syncing 
+  } = appState
+
   return (
     <Main>
       <BaseLayout>
         {syncing && <Syncing />}
         <p>TokenWrapper</p>
-        <p>{erc20}</p>
+        <p>Wrapped token: {erc20}</p>
+        <p>MiniMe token: {token}</p>
       </BaseLayout>
     </Main>
   )

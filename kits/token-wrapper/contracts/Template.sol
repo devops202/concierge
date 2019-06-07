@@ -106,7 +106,7 @@ contract Template is TemplateBase {
     acl.createPermission(voting, finance, finance.MANAGE_PAYMENTS_ROLE(), voting);
 
     // TODO: Set permissions for the token wrapper app.
-    // ...
+    acl.createPermission(root, tokenWrapper, tokenWrapper.CONTROLLER_MANAGER_ROLE(), root);
 
     // Clean up permissions.
     acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());

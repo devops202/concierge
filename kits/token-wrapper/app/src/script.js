@@ -12,7 +12,10 @@ api.store(
 
     switch (event.event) {
       case INITIALIZATION_TRIGGER:
-        newState = { erc20: await getERC20() }
+        newState = { 
+          erc20: await getERC20(),
+          token: await getToken()
+        }
         break
       default:
         newState = state
@@ -28,4 +31,8 @@ api.store(
 
 async function getERC20() {
   return await api.call('erc20').toPromise();
+}
+
+async function getToken() {
+  return await api.call('token').toPromise();
 }

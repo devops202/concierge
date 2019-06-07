@@ -67294,8 +67294,9 @@ function App() {
       api = _useAragonApi.api,
       appState = _useAragonApi.appState;
 
-  var syncing = appState.syncing;
-  return _react.default.createElement(_ui.Main, null, _react.default.createElement(BaseLayout, null, syncing && _react.default.createElement(Syncing, null), _react.default.createElement("p", null, "TokenWrapper")));
+  var erc20 = appState.erc20,
+      syncing = appState.syncing;
+  return _react.default.createElement(_ui.Main, null, _react.default.createElement(BaseLayout, null, syncing && _react.default.createElement(Syncing, null), _react.default.createElement("p", null, "TokenWrapper"), _react.default.createElement("p", null, erc20)));
 }
 
 var BaseLayout = _styledComponents.default.div.withConfig({
@@ -67303,21 +67304,16 @@ var BaseLayout = _styledComponents.default.div.withConfig({
   componentId: "m4eogz-0"
 })(["display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;"]);
 
-var Count = _styledComponents.default.h1.withConfig({
-  displayName: "App__Count",
-  componentId: "m4eogz-1"
-})(["font-size:30px;"]);
-
 var Buttons = _styledComponents.default.div.withConfig({
   displayName: "App__Buttons",
-  componentId: "m4eogz-2"
+  componentId: "m4eogz-1"
 })(["display:grid;grid-auto-flow:column;grid-gap:40px;margin-top:20px;"]);
 
 var Syncing = _styledComponents.default.div.attrs({
   children: 'Syncing…'
 }).withConfig({
   displayName: "App__Syncing",
-  componentId: "m4eogz-3"
+  componentId: "m4eogz-2"
 })(["position:absolute;top:15px;right:20px;"]);
 
 var _default = App;
@@ -67377,7 +67373,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36873" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46233" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
